@@ -8,7 +8,12 @@ import (
 )
 
 type Config struct {
-	Port string
+	Port       string
+	DbHost     string
+	DbPort     string
+	DbUser     string
+	DbPassword string
+	DbName     string
 }
 
 func Load() Config {
@@ -22,8 +27,38 @@ func Load() Config {
 		port = "8080"
 	}
 
+	dbName := os.Getenv("DB_NAME")
+	if dbName == "" {
+		dbName = "bookshelf"
+	}
+
+	dbHost := os.Getenv("DB_HOST")
+	if dbHost == "" {
+		dbHost = "localhost"
+	}
+
+	dbPort := os.Getenv("DB_PORT")
+	if dbPort == "" {
+		dbPort = "5432"
+	}
+
+	dbUser := os.Getenv("DB_USER")
+	if dbUser == "" {
+		dbUser = "postgres"
+	}
+
+	dbPassword := os.Getenv("DB_PASSWORD")
+	if dbPassword == "" {
+		log.Fatal("please provide a database password ")
+	}
+
 	return Config{
-		Port: port,
+		Port:       port,
+		DbHost:     dbHost,
+		DbPort:     dbPort,
+		DbUser:     dbUser,
+		DbPassword: dbPassword,
+		DbName:     dbName,
 	}
 
 }
