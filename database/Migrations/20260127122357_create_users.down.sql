@@ -1,0 +1,1 @@
+alter drop table if exists users;
