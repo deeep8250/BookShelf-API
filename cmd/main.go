@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/deeep8250/config"
+	"github.com/deeep8250/database"
 	"github.com/deeep8250/routes"
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +12,7 @@ import (
 func main() {
 
 	cfg := config.Load()
-
+	database.ConnectDB(cfg)
 	router := gin.Default()
 
 	routes.RegisterRoutes(router)
