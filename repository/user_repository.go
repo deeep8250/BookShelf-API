@@ -31,3 +31,21 @@ func (r *UserRepository) CreateUser(ctx context.Context, email, passwordHash str
 	return userID, nil
 
 }
+
+func (r *UserRepository) GetUserByEmil(ctx context.Context, email string) (int64, string, error) {
+	var id int64
+	var passwordHash string
+
+	query := `
+	SELECT id,password_hash
+	FROM users
+	WHERE email = $1
+	`
+
+	err := r.db.QueryRow(ctx, query, email).Scan(&id, &passwordHash)
+	if err != nil {
+		return 0, "", nil
+	}
+
+	return id, passwordHash, nil
+}
