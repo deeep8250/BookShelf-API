@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/deeep8250/auth"
 	"github.com/deeep8250/database"
 	"github.com/deeep8250/handlers"
 	"github.com/deeep8250/repository"
@@ -16,10 +17,20 @@ func RegisterRoutes(router *gin.Engine) {
 	})
 
 	// dependency injection
+	//users
 	userRepo := repository.NewUserRepository(database.DB)
 	userService := services.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
 
-	router.POST("/register", userHandler.Register)
+	//books
+	booksRepo := repository.NewBookRepository(database.DB)
+	bookService := services.NewBookService(booksRepo)
+	bookHandler := handlers.NewBookHandler(bookService)
 
+	authGroup := router.Group("/api")
+	authGroup.Use(auth.AuthMiddleware())
+
+	router.POST("/register", userHandler.Register)
+	router.POST("/login", userHandler.Login)
+	authGroup.POST("/book", bookHandler.CreateBook)
 }

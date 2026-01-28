@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/deeep8250/auth"
 	"github.com/deeep8250/repository"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -33,5 +34,26 @@ func (s *UserService) RegisterUser(ctx context.Context, email, password string) 
 	}
 
 	return userID, nil
+
+}
+
+func (s *UserService) LoginUser(ctx context.Context, email, password string) (string, error) {
+
+	userID, storeHash, err := s.userRepo.GetUserByEmil(ctx, email)
+	if err != nil {
+		return "", errors.New("invalid credentials")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(storeHash), []byte(password))
+	if err != nil {
+		return "", errors.New("invalid credentials")
+	}
+
+	token, err := auth.GenerateToken(userID)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 
 }
