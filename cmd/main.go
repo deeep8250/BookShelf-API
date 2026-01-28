@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/deeep8250/auth"
 	"github.com/deeep8250/config"
 	"github.com/deeep8250/database"
 	"github.com/deeep8250/routes"
@@ -12,6 +13,7 @@ import (
 func main() {
 
 	cfg := config.Load()
+	auth.InitJWT(cfg.SecretKey)
 	database.ConnectDB(cfg)
 	router := gin.Default()
 

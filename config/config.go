@@ -14,6 +14,7 @@ type Config struct {
 	DbUser     string
 	DbPassword string
 	DbName     string
+	SecretKey  string
 }
 
 func Load() Config {
@@ -52,6 +53,11 @@ func Load() Config {
 		log.Fatal("please provide a database password ")
 	}
 
+	jwt_sec := os.Getenv("JWT_SECRET")
+	if jwt_sec == "" {
+		log.Fatal("secret key error")
+	}
+
 	return Config{
 		Port:       port,
 		DbHost:     dbHost,
@@ -59,6 +65,7 @@ func Load() Config {
 		DbUser:     dbUser,
 		DbPassword: dbPassword,
 		DbName:     dbName,
+		SecretKey:  jwt_sec,
 	}
 
 }
