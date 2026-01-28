@@ -15,6 +15,7 @@ func RegisterRoutes(router *gin.Engine) {
 		})
 	})
 
+	// dependency injection
 	userRepo := repository.NewUserRepository(database.DB)
 	userService := services.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
