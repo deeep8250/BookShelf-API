@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/deeep8250/services"
 	"github.com/gin-gonic/gin"
@@ -55,4 +56,100 @@ func (h *BookHandler) CreateBook(c *gin.Context) {
 		"msg":    "created!",
 	})
 
+}
+
+type UpdateBookRequest struct {
+	Title       *string `json:"title"`
+	Author      *string `json:"author"`
+	Description *string `json:"description"`
+}
+
+func (h *BookHandler) UpdateBook(c *gin.Context) {
+
+	bookIdParam := c.Param("id")
+	bookID, err := strconv.ParseInt(bookIdParam, 10, 65)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid book id",
+		})
+		return
+	}
+
+	userIdValue, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
+		return
+	}
+	userID := userIdValue.(int64)
+
+	var req UpdateBookRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid input",
+		})
+		return
+	}
+
+	err = h.bookService.UpdateBook(
+		c.Request.Context(),
+		bookID,
+		userID,
+		req.Title,
+		req.Author,
+		req.Description,
+	)
+
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "book updated successfully",
+	})
+
+}
+
+func (h *BookHandler) DeleteBook(c *gin.Context) {
+
+	bookIDParam := c.Param("id")
+
+	bookID, err := strconv.ParseInt(bookIDParam, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid book id",
+		})
+		return
+	}
+
+	userIDValue, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
+		return
+	}
+
+	userID := userIDValue.(int64)
+
+	err = h.bookService.DeleteBook(
+		c.Request.Context(),
+		bookID,
+		userID,
+	)
+
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "book deleted successfully",
+	})
 }

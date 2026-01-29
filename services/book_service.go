@@ -24,3 +24,29 @@ func (s *BookService) CreateBook(ctx context.Context, userID int64, title, autho
 
 	return s.repo.CreateBook(ctx, userID, title, author, description)
 }
+
+func (s *BookService) UpdateBook(ctx context.Context, bookID int64, userID int64, title *string, author *string, description *string) error {
+
+	if title == nil && author == nil && description == nil {
+		return errors.New("no fields provided")
+	}
+
+	return s.repo.UpdateBook(
+		ctx,
+		bookID,
+		userID,
+		title,
+		author,
+		description,
+	)
+
+}
+
+func (s *BookService) DeleteBook(
+	ctx context.Context,
+	bookID int64,
+	userID int64,
+) error {
+
+	return s.bookRepo.DeleteBook(ctx, bookID, userID)
+}
