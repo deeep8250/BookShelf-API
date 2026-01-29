@@ -33,4 +33,6 @@ func RegisterRoutes(router *gin.Engine) {
 	router.POST("/register", userHandler.Register)
 	router.POST("/login", userHandler.Login)
 	authGroup.POST("/book", bookHandler.CreateBook)
+	authGroup.PATCH("update_book/:id", bookHandler.UpdateBook)
+	authGroup.DELETE("/books/:id", bookHandler.DeleteBook)
 }
