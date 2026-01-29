@@ -13,8 +13,10 @@ import (
 func main() {
 
 	cfg := config.Load()
-	auth.InitJWT(cfg.SecretKey)
+
 	database.ConnectDB(cfg)
+	auth.InitJWT(cfg.SecretKey)
+
 	router := gin.Default()
 
 	routes.RegisterRoutes(router)
