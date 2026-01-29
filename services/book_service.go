@@ -48,5 +48,5 @@ func (s *BookService) DeleteBook(
 	userID int64,
 ) error {
 
-	return s.bookRepo.DeleteBook(ctx, bookID, userID)
+	return s.repo.DeleteBook(ctx, bookID, userID)
 }
