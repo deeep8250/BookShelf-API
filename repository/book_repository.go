@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/deeep8250/models"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -30,6 +31,35 @@ func (r *BookRepository) CreateBook(ctx context.Context, userID int64, title, au
 		return 0, err
 	}
 	return bookID, nil
+
+}
+
+func (r *BookRepository) GetBooksRepo(ctx context.Context, userID, limit, offset int) ([]models.Books, error) {
+
+	query := `SELECT id,title,author,description,created_at  FROM books WHERE user_id=$1 ORDER BY created_at DESC LIMIT $2 OFFSET $3`
+
+	rows, err := r.db.Query(ctx, query, userID, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var books []models.Books
+
+	for rows.Next() {
+
+		var b models.Books
+		if err := rows.Scan(
+			&b.Id, &b.Title, &b.Author, &b.Description, &b.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+
+		books = append(books, b)
+	}
+
+	return books, nil
 
 }
 

@@ -35,4 +35,5 @@ func RegisterRoutes(router *gin.Engine) {
 	authGroup.POST("/book", bookHandler.CreateBook)
 	authGroup.PATCH("update_book/:id", bookHandler.UpdateBook)
 	authGroup.DELETE("/books/:id", bookHandler.DeleteBook)
+	authGroup.GET("/books", bookHandler.GetBooks)
 }

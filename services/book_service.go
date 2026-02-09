@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/deeep8250/models"
 	"github.com/deeep8250/repository"
 )
 
@@ -23,6 +24,24 @@ func (s *BookService) CreateBook(ctx context.Context, userID int64, title, autho
 	}
 
 	return s.repo.CreateBook(ctx, userID, title, author, description)
+}
+
+func (s *BookService) GetBoooks(ctx context.Context, userID, limit, offset int) ([]models.Books, error) {
+
+	if limit <= 0 {
+		limit = 10
+	}
+
+	if limit > 100 {
+		limit = 100
+	}
+
+	if offset < 0 {
+		offset = 0
+	}
+
+	return s.repo.GetBooksRepo(ctx, userID, limit, offset)
+
 }
 
 func (s *BookService) UpdateBook(ctx context.Context, bookID int64, userID int64, title *string, author *string, description *string) error {

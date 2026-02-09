@@ -25,7 +25,7 @@ func ConnectDB(cfg config.Config) {
 	poolConfig, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
 		log.Fatal("failed to parse DB config", err.Error())
-	}
+	}  
 
 	poolConfig.MaxConns = 10
 	poolConfig.MinConns = 2

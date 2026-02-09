@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -54,6 +55,60 @@ func (h *BookHandler) CreateBook(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"bookID": bookID,
 		"msg":    "created!",
+	})
+
+}
+
+func (h *BookHandler) GetBooks(c *gin.Context) {
+
+	userIdValue, exist := c.Get("user_id")
+	if !exist {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized user",
+		})
+		return
+	}
+
+	userID := userIdValue.(int64)
+
+	limitStr := c.DefaultQuery("limit", "")
+	offsetStr := c.DefaultQuery("offset", "")
+
+	var limit, offset int
+	var err error
+
+	if limitStr != "" {
+		limit, err = strconv.Atoi(limitStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "invalid limit",
+			})
+			return
+		}
+	}
+
+	if offsetStr != "" {
+
+		offset, err = strconv.Atoi(offsetStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "invalid offset",
+			})
+			return
+		}
+	}
+	fmt.Println("userID:", userID, "limit:", limit, "offset:", offset)
+
+	books, err := h.bookService.GetBoooks(c.Request.Context(), int(userID), limit, offset)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "hi",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"books": books,
 	})
 
 }
