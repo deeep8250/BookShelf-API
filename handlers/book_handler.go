@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/deeep8250/services"
+	services "github.com/deeep8250/services/Books"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,9 +20,9 @@ func NewBookHandler(BookService *services.BookService) *BookHandler {
 }
 
 type CreateBookRequest struct {
-	Title       string `json:"title"`
-	Author      string `json:"author"`
-	Description string `json:"description"`
+	Title       string `json:"title" binding:"required"`
+	Author      string `json:"author" binding:"required"`
+	Description string `json:"description" binding:"required"`
 }
 
 func (h *BookHandler) CreateBook(c *gin.Context) {
@@ -44,7 +44,7 @@ func (h *BookHandler) CreateBook(c *gin.Context) {
 		return
 	}
 
-	bookID, err := h.bookService.CreateBook(c.Request.Context(), userID.(int64), req.Title, req.Author, req.Description)
+	bookID, err := h.bookService.CreateBookHandler(c.Request.Context(), userID.(int64), req.Title, req.Author, req.Description)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

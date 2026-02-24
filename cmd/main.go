@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/deeep8250/auth"
+	auth "github.com/deeep8250/auth/JWT"
 	"github.com/deeep8250/config"
 	"github.com/deeep8250/database"
 	"github.com/deeep8250/routes"

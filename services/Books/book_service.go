@@ -1,24 +1,23 @@
-package services
+package books
 
 import (
 	"context"
 	"errors"
 
 	"github.com/deeep8250/models"
-	"github.com/deeep8250/repository"
 )
 
 type BookService struct {
-	repo *repository.BookRepository
+	repo BookRepo
 }
 
-func NewBookService(bookRepo *repository.BookRepository) *BookService {
+func NewBookService(bookRepo BookRepo) *BookService {
 	return &BookService{
 		repo: bookRepo,
 	}
 }
 
-func (s *BookService) CreateBook(ctx context.Context, userID int64, title, author, description string) (int64, error) {
+func (s *BookService) CreateBookHandler(ctx context.Context, userID int64, title, author, description string) (int64, error) {
 	if title == "" || author == "" || description == "" {
 		return 0, errors.New("title is required")
 	}

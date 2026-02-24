@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/deeep8250/services"
+	services "github.com/deeep8250/services/Users"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,8 +18,8 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 }
 
 type RegisterRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required,min=6"`
 }
 
 func (h *UserHandler) Register(c *gin.Context) {
@@ -61,8 +61,8 @@ func (h *UserHandler) Register(c *gin.Context) {
 }
 
 type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
 }
 
 func (h *UserHandler) Login(c *gin.Context) {

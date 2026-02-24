@@ -5,7 +5,9 @@ import (
 	"github.com/deeep8250/database"
 	"github.com/deeep8250/handlers"
 	"github.com/deeep8250/repository"
-	"github.com/deeep8250/services"
+	Bookservices "github.com/deeep8250/services/Books"
+	UserServices "github.com/deeep8250/services/Users"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,12 +21,12 @@ func RegisterRoutes(router *gin.Engine) {
 	// dependency injection
 	//users
 	userRepo := repository.NewUserRepository(database.DB)
-	userService := services.NewUserService(userRepo)
+	userService := UserServices.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
 
 	//books
 	booksRepo := repository.NewBookRepository(database.DB)
-	bookService := services.NewBookService(booksRepo)
+	bookService := Bookservices.NewBookService(booksRepo)
 	bookHandler := handlers.NewBookHandler(bookService)
 
 	authGroup := router.Group("/api")

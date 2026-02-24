@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	JWT "github.com/deeep8250/auth/JWT"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,7 +31,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		tokenString := parts[1]
-		userID, err := ValidateToken(tokenString)
+		userID, err := JWT.ValidateToken(tokenString)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "invalid or expired token",
