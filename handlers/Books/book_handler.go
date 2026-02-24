@@ -1,19 +1,18 @@
-package handlers
+package books
 
 import (
 	"fmt"
 	"net/http"
 	"strconv"
 
-	services "github.com/deeep8250/services/Books"
 	"github.com/gin-gonic/gin"
 )
 
 type BookHandler struct {
-	bookService *services.BookService
+	bookService BookServices
 }
 
-func NewBookHandler(BookService *services.BookService) *BookHandler {
+func NewBookHandler(BookService BookServices) *BookHandler {
 	return &BookHandler{
 		bookService: BookService,
 	}
@@ -25,7 +24,7 @@ type CreateBookRequest struct {
 	Description string `json:"description" binding:"required"`
 }
 
-func (h *BookHandler) CreateBook(c *gin.Context) {
+func (h *BookHandler) CreateBookHandler(c *gin.Context) {
 
 	var req CreateBookRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -59,7 +58,7 @@ func (h *BookHandler) CreateBook(c *gin.Context) {
 
 }
 
-func (h *BookHandler) GetBooks(c *gin.Context) {
+func (h *BookHandler) GetBooksHandler(c *gin.Context) {
 
 	userIdValue, exist := c.Get("user_id")
 	if !exist {
@@ -119,7 +118,7 @@ type UpdateBookRequest struct {
 	Description *string `json:"description"`
 }
 
-func (h *BookHandler) UpdateBook(c *gin.Context) {
+func (h *BookHandler) UpdateBookHandler(c *gin.Context) {
 
 	bookIdParam := c.Param("id")
 	bookID, err := strconv.ParseInt(bookIdParam, 10, 65)
@@ -169,7 +168,7 @@ func (h *BookHandler) UpdateBook(c *gin.Context) {
 
 }
 
-func (h *BookHandler) DeleteBook(c *gin.Context) {
+func (h *BookHandler) DeleteBookHandler(c *gin.Context) {
 
 	bookIDParam := c.Param("id")
 
